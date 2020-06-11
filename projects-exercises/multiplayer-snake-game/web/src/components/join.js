@@ -13,7 +13,7 @@ export default class Join extends Component {
     this.setState({ name: e.target.value });
   };
   handleRoom = (e) => {
-    this.setState({ password: e.target.room });
+    this.setState({ room: e.target.value });
   };
 
   handleFormSubmit = (e) => {
@@ -21,10 +21,9 @@ export default class Join extends Component {
     e.preventDefault();
     if (!!!name || !!!room) {
       this.setState({ form_submit: true });
-      // return;
+      return;
     }
-
-    this.props.LoginAction();
+    this.props.joinRoom(name, room);
   };
   render() {
     const { name, room, form_submit } = this.state;

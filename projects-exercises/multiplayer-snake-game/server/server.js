@@ -30,17 +30,14 @@ io.of("/games").on("connection", (socket) => {
     } else if (!gameRoomsStack.includes(room)) {
       socket.join(room);
       gameRoomsStack.push(room);
-      socket.emit(
-        "joined_room",
-        "you have successfully joined this room, waiting for another player"
-      );
+      socket.emit("joined_room", "snake_1");
       return;
     } else {
       socket.join(room);
       let index = gameRoomsStack.indexOf(room);
       gameRoomsStack.splice(index, 1);
       gameRooms[room] = true;
-      socket.emit("joined_room", "you have successfully joined this room");
+      socket.emit("joined_room", "snake_2");
       io.of("/games")
         .in(room)
         .emit("start_game", "A new player has joined this room");
