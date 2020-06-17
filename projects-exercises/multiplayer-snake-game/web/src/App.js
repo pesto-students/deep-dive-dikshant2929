@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import io from "socket.io-client";
 import Join from "./components/join";
 import SnakeGame from "./components/snake_game";
+import JoinRoom from "./components/join_room";
 
 export default class App extends Component {
   constructor(props) {
@@ -14,8 +15,10 @@ export default class App extends Component {
       },
       start_game: false,
       my_snake: null,
+      snake_1: "",
+      snake_2: "",
     };
-    this.snake_game = io.connect("http://localhost:3003/games");
+    this.snake_game = io.connect("http://192.168.29.106:3003/games");
   }
 
   componentDidMount() {
@@ -24,28 +27,55 @@ export default class App extends Component {
     });
     this.snake_game.on("joined_room", (my_snake) => {
       this.setState({ my_snake });
+      console.log(my_snake);
     });
     this.snake_game.on("start_game", (res) => {
-      this.setState({ start_game: true, join_room: true });
-      console.log(res);
+      this.setState({ start_game: true, ...res });
     });
   }
 
   joinRoom = (name, room) => {
-    debugger;
-    this.setState({ user_detail: { name, room } });
-    this.snake_game.emit("request_to_join_room", room);
+    this.setState({ user_detail: { name, room }, join_room: true });
+    this.snake_game.emit("request_to_join_room", { room, name });
+  };
+
+  gameOver = () => {
+    this.setState({
+      join_room: false,
+      user_detail: {
+        name: "",
+        room: "",
+      },
+      start_game: false,
+      my_snake: null,
+      snake_1: "",
+      snake_2: "",
+    });
   };
 
   render() {
-    const { join_room, user_detail, start_game } = this.state;
+    const {
+      join_room,
+      user_detail,
+      start_game,
+      my_snake,
+      snake_1,
+      snake_2,
+    } = this.state;
     return (
       <>
         {!start_game && !join_room && (
           <Join joinRoom={this.joinRoom} {...user_detail} />
         )}
+        {!start_game && join_room && <JoinRoom />}
         {start_game && join_room && (
-          <SnakeGame my_snake={"snake_2"} snake_game={this.snake_game} />
+          <SnakeGame
+            {...user_detail}
+            my_snake={my_snake}
+            snake_game={this.snake_game}
+            {...{ snake_1, snake_2 }}
+            gameOver={this.gameOver}
+          />
         )}
       </>
     );
