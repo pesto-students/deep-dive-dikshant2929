@@ -60,6 +60,10 @@ io.of("/games").on("connection", (socket) => {
     io.of("/games").in(res.room).emit("eat_food", res.state);
     return;
   });
+  socket.on("enlarge_snake", (res) => {
+    io.of("/games").in(res.room).emit("enlarge_snake", res.state);
+    return;
+  });
   socket.on("increase_game_speed", (res) => {
     io.of("/games").in(res.room).emit("increase_game_speed", res.state);
     return;
@@ -68,19 +72,16 @@ io.of("/games").on("connection", (socket) => {
     io.of("/games").in(res.room).emit("game_over", res.message);
     gameRooms[res.room] = undefined;
 
-    io.of("/games")
-      .in(res.room)
-      .clients((error, socketIds) => {
-        if (error) throw error;
+    // io.of("/games")
+    //   .in(res.room)
+    //   .clients((error, socketIds) => {
+    //     if (error) throw error;
 
-        socketIds.forEach((socketId) =>
-          io.sockets.sockets[socketId].leave(res.room)
-        );
-      });
+    //     socketIds.forEach((socketId) =>
+    //       io.sockets.sockets[socketId].leave(res.room)
+    //     );
+    //   });
 
-    // io.sockets.clients(res.room).forEach(function (s) {
-    //   s.leave(res.room);
-    // });
     return;
   });
 });

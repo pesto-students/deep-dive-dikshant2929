@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import Snake from "./snake";
 import Food from "./food";
+import Timer from "./timer";
 const getRandomCoordinates = () => {
   let min = 1;
   let max = 98;
@@ -11,7 +12,7 @@ const getRandomCoordinates = () => {
 
 const initialState = {
   food: [50, 50],
-  speed: 500,
+  speed: 200,
   hide_food: false,
   // direction: "RIGHT",
   // snakeDots: [
@@ -49,6 +50,9 @@ class App extends Component {
       // console.log(this.props.my_snake);
     });
     this.snake_game.on("eat_food", (state) => {
+      this.setState({ ...state, hide_food: false });
+    });
+    this.snake_game.on("enlarge_snake", (state) => {
       this.setState({ ...state, hide_food: false });
     });
     this.snake_game.on("increase_game_speed", (state) => {
@@ -253,12 +257,22 @@ class App extends Component {
 
   enlargeSnake() {
     let snake = this.state[this.props.my_snake];
-
     let new_snake_dots = [...snake.snake_dots];
     new_snake_dots.unshift([]);
-    this.setState({
-      [this.props.my_snake]: { ...snake, snake_dots: new_snake_dots },
+    new_snake_dots.unshift([]);
+    new_snake_dots.unshift([]);
+    new_snake_dots.unshift([]);
+    new_snake_dots.unshift([]);
+
+    this.snake_game.emit("enlarge_snake", {
+      state: {
+        [this.props.my_snake]: { ...snake, snake_dots: new_snake_dots },
+      },
+      room: this.props.room,
     });
+    // this.setState({
+    //   [this.props.my_snake]: { ...snake, snake_dots: new_snake_dots },
+    // });
   }
 
   increaseSpeed() {
@@ -334,7 +348,7 @@ class App extends Component {
             {this.state.snake_1.snake_dots.length -
               initialState.snake_1.snake_dots.length}
           </h1>
-          <h1>Time Left:20 sec</h1>
+          <Timer onGameOver={this.onGameOver} />
           <h1 style={{ marginLeft: "auto" }}>
             {this.props.snake_2}:
             {this.state.snake_2.snake_dots.length -
