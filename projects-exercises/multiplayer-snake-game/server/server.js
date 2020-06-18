@@ -1,6 +1,6 @@
 const express = require("express");
 const app = express();
-const port = 3003;
+const port = process.env.PORT || 3003;
 const http = require("http").createServer();
 
 const io = require("socket.io")(http);
@@ -69,9 +69,9 @@ io.of("/games").on("connection", (socket) => {
     return;
   });
   socket.on("game_over", (res) => {
+    //gameRooms[res.room] = undefined;
+    gameRooms = deleteKeyFromObject({object : gameRooms, key : res.room});
     io.of("/games").in(res.room).emit("game_over", res.message);
-    gameRooms[res.room] = undefined;
-
     // io.of("/games")
     //   .in(res.room)
     //   .clients((error, socketIds) => {
@@ -85,6 +85,15 @@ io.of("/games").on("connection", (socket) => {
     return;
   });
 });
+
+function deleteKeyFromObject({object, key}){
+  return Object.keys(object).reduce((_object, _key) => {
+    if (_key !== key) {
+      _object[_key] = _object[_key]
+    }
+    return _object
+  }, {})
+}
 
 http.listen(port, () => {
   console.log("server is litening on localhost:" + port);

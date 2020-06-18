@@ -18,7 +18,11 @@ export default class App extends Component {
       snake_1: "",
       snake_2: "",
     };
-    this.snake_game = io.connect("http://192.168.29.106:3003/games");
+    this.snake_game = io.connect("http://192.168.1.10:3003/games");
+  }
+  
+  componentWillUnmount(){
+    this.snake_game.disconnect();
   }
 
   componentDidMount() {

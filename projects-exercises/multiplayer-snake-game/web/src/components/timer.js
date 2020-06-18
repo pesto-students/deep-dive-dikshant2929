@@ -18,6 +18,11 @@ export default class Timer extends Component {
       }
     }, 1000);
   }
+
+  componentWillUnmount(){
+    this.timer && clearInterval(this.timer);
+  }
+
   render() {
     const { time_left } = this.state;
     return (

@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React, { PureComponent } from "react";
 import Snake from "./snake";
 import Food from "./food";
 import Timer from "./timer";
@@ -35,7 +35,9 @@ const initialState = {
   },
 };
 
-class App extends Component {
+let showAlert = false;
+
+class App extends PureComponent {
   constructor(props) {
     super(props);
     this.state = {
@@ -59,11 +61,18 @@ class App extends Component {
       this.setState({ ...state });
     });
     this.snake_game.on("game_over", (msg) => {
-      alert(msg);
-      this.props.gameOver();
+      if(!showAlert){
+        alert(msg);
+        this.props.gameOver(msg);
+        showAlert = true;
+      }
     });
   }
   // state = initialState;
+
+  componentWillUnmount(){
+    this.snake_game.disconnect();
+  }
 
   componentDidMount() {
     setInterval(this.moveSnake, this.state.speed);
@@ -299,7 +308,7 @@ class App extends Component {
     }
     message =
       opponent_player +
-      "won as " +
+      " won as " +
       this.props[this.props.my_snake] +
       "'s snake dead";
 
