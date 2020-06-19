@@ -8,6 +8,7 @@ export default function Snake(props) {
           left: `${dot[0]}%`,
           top: `${dot[1]}%`,
           borderRadius: "50%",
+          backgroundColor: props.color,
         };
         return <div key={i} className="snake-dot" style={style}></div>;
       })}

@@ -23,7 +23,8 @@ html, body,#root {
   width:500px;
   height: 500px;
   border: 10px solid #b82e2e;
-  background-color:#ffcf91;
+  background-color:#cfcfe8;
+  border-radius: 15px;
 
 }
 

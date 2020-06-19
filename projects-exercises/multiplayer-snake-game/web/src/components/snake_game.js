@@ -61,7 +61,7 @@ class App extends PureComponent {
       this.setState({ ...state });
     });
     this.snake_game.on("game_over", (msg) => {
-      if(!showAlert){
+      if (!showAlert) {
         alert(msg);
         this.props.gameOver(msg);
         showAlert = true;
@@ -70,7 +70,7 @@ class App extends PureComponent {
   }
   // state = initialState;
 
-  componentWillUnmount(){
+  componentWillUnmount() {
     this.snake_game.disconnect();
   }
 
@@ -352,13 +352,13 @@ class App extends PureComponent {
     return (
       <div>
         <div style={{ display: "flex" }}>
-          <h1>
+          <h1 style={{ color: "#1717fc" }}>
             {this.props.snake_1}:
             {this.state.snake_1.snake_dots.length -
               initialState.snake_1.snake_dots.length}
           </h1>
           <Timer onGameOver={this.onGameOver} />
-          <h1 style={{ marginLeft: "auto" }}>
+          <h1 style={{ marginLeft: "auto", color: "#7aeb3d" }}>
             {this.props.snake_2}:
             {this.state.snake_2.snake_dots.length -
               initialState.snake_2.snake_dots.length}
@@ -366,8 +366,8 @@ class App extends PureComponent {
         </div>
 
         <div className="game-area">
-          <Snake snake_dots={this.state.snake_1.snake_dots} />
-          <Snake snake_dots={this.state.snake_2.snake_dots} />
+          <Snake color="#1717fc" snake_dots={this.state.snake_1.snake_dots} />
+          <Snake color="#7aeb3d" snake_dots={this.state.snake_2.snake_dots} />
           {!this.state.hide_food && <Food food={this.state.food} />}
         </div>
       </div>
